@@ -5,6 +5,7 @@ import {
   HStack,
   IconButton,
   LightMode,
+  Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
@@ -29,10 +30,19 @@ export default function Header() {
   const logoColor = useColorModeValue("red.500", "red.200");
   const Icon = useColorModeValue(FaMoon, FaSun); //  컴포넌트는 무조건 대문자로 시작해야 함
   return (
-    <HStack
+    <Stack // 반응형으로 HStack VStack으로 변형하기 위해 기본은 Stack으로 사용해둠
       justifyContent={"space-between"}
+      alignItems="center"
       py={5}
-      px={10}
+      px={40}
+      direction={{
+        sm: "column",
+        md: "row",
+      }}
+      spacing={{
+        sm: 4,
+        md: 0,
+      }}
       borderBottomWidth={1}
     >
       <Box color={logoColor}>
@@ -56,6 +66,6 @@ export default function Header() {
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
-    </HStack>
+    </Stack>
   );
 }
