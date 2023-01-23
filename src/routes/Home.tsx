@@ -3,6 +3,7 @@ import Room from "../components/Room";
 import RoomSkeleton from "../components/RoomSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getRooms } from "../api";
+import { Link } from "react-router-dom";
 
 
 interface IPhoto {
@@ -55,6 +56,7 @@ export default function Home() {
           <RoomSkeleton />
         </>
       ) : null}
+      <Link to="/asdfsd">404</Link>
       {data?.map((room) => (
         <Room
           // imageUrl={room.photos[0].file}
