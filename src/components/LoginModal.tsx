@@ -1,9 +1,11 @@
+import {useForm} from "react-hook-form"
 import {
     Box,
     Button,
     Input,
     InputGroup,
     InputLeftElement,
+    Text,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -21,33 +23,28 @@ import {
     onClose: () => void;
   }
   
+  interface IForm {
+    username: string;
+    password: string;
+  }
+
+  
   export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    if (name === "username") {
-      setUsername(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
-  };
-  const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!email.includes("@")) {
-      setEmailError("please write a valid email");
-    }
-    console.log(username, password);
-  };
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm<IForm>();
+    const onSubmit = (data: IForm) => {
+      console.log(data);
+    };
     return (
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Log in</ModalHeader>
           <ModalCloseButton />
-          <ModalBody as="form" onSubmit={onSubmit as any}>
+          <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
             <VStack>
               <InputGroup size={"md"}>
                 <InputLeftElement
@@ -58,12 +55,10 @@ import {
                   }
                 />
                 <Input
-                required
-                name="username"
-                onChange={onChange}
-                value={username}
-                variant={"filled"}
-                placeholder="Username"
+                  isInvalid={Boolean(errors.username?.message)} // username이 입력되지 않았을 경우 아래 경고메시지를 빨간색으로 띄우기
+                  {...register("username", {
+                    required: "Please write a username", // (html이 아니라)js에서의 required 설정
+                  })}
                 />
               </InputGroup>
               <InputGroup>
@@ -75,13 +70,10 @@ import {
                   }
                 />
                 <Input
-                required
-                name="password"
-                onChange={onChange}
-                value={password}
-                type="password"
-                variant={"filled"}
-                placeholder="Password"
+                  isInvalid={Boolean(errors.password?.message)} // password가 입력되지 않았을 경우 아래 경고메시지를 빨간색으로 띄우기
+                  {...register("password", {
+                    required: "Please write a password", // (html이 아니라)js에서의 required 설정
+                  })}
                 />
               </InputGroup>
             </VStack>
