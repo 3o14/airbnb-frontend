@@ -11,6 +11,7 @@ import {
   MenuItem,
   MenuList,
   Stack,
+  ToastId,
   useColorMode,
   useColorModeValue,
   useDisclosure,
@@ -21,7 +22,9 @@ import LoginModal from "./LoginModal";
 import SignUpModal from "./SignupModal"
 import useUser from "../lib/useUser";
 import { logOut } from "../api";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
+
 
 export default function Header() {
   const { userLoading, isLoggedIn, user } = useUser();
@@ -41,20 +44,29 @@ export default function Header() {
   const Icon = useColorModeValue(FaMoon, FaSun); //  컴포넌트는 무조건 대문자로 시작해야 함
   const toast = useToast(); // chakri UI에서 알림창 toast 사용하기 (로그아웃 확인 알림창)
   const queryClient = useQueryClient();
+  const toastId = useRef<ToastId>();
+  const mutation = useMutation(logOut, {
+    onMutate: () => {
+      toastId.current = toast({
+        title: "Login out...",
+        description: "Sad to see you go...",
+        status: "loading",
+        position: "bottom-right",
+      });
+    },
+    onSuccess: () => {
+      if (toastId.current) {
+        queryClient.refetchQueries(["me"]);
+        toast.update(toastId.current, {
+          status: "success",
+          title: "Done!",
+          description: "See you later!",
+        });
+      }
+    },
+  });
   const onLogOut = async () => {
-    const toastId = toast({
-      title: "Login out...", // 메인 문구
-      description: "Sad to see you go...", // 상세 문구
-      status: "loading", // 알림 상태(아이콘)) 설정 [상태: success, loading, error, info]
-      position: "bottom-right", // 위치
-    });
-    await logOut();
-    queryClient.refetchQueries(["me"]);
-    toast.update(toastId, {
-      status: "success",
-      title: "Done!",
-      description: "See you later!",
-    });
+    mutation.mutate();
   };
 
   return (
