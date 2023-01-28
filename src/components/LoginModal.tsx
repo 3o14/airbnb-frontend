@@ -42,23 +42,25 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<IForm>();
   const toast = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation(usernameLogIn, {
-    onMutate: () => {
-      console.log("mutation starting");
-    },
-    onSuccess: (data) => { // 로그인이 성공하면
+    onSuccess: () => {
+      toast({
+        title: "welcome back!",
+        status: "success",
+      });
+      onClose();
+      queryClient.refetchQueries(["me"]);
       toast({
         title: "welcome back!",
         status: "success",
       });
       onClose(); // 로그인 모달창은 닫고
       queryClient.refetchQueries(["me"]); // users/me api는 refetch 해주기
-    },
-    onError: (error) => {
-      console.log("mutation has an error");
+      reset();
     },
   });
   const onSubmit = ({ username, password }: IForm) => {
@@ -106,6 +108,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 />
               </InputGroup>
             </VStack>
+            {mutation.isError ? (
+              <Text color="red.500" textAlign={"center"} fontSize="sm">
+                Username or Password are wrong
+              </Text>
+            ) : null} 
             <Button
               isLoading={mutation.isLoading}
               type="submit"
