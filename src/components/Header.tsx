@@ -120,6 +120,11 @@ export default function Header() {
               {/* 메뉴 리스트 */}
               <MenuList>
                 {/* 메뉴 리스트 안의 메뉴 아이템 */}
+                {user?.is_host ? (
+                  <Link to="/rooms/upload">
+                    <MenuItem>Upload room</MenuItem>
+                  </Link>
+                ) : null}
                 <MenuItem onClick={onLogOut}>Log out</MenuItem>
               </MenuList>
             </Menu>
