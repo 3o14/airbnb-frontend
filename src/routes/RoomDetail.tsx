@@ -65,7 +65,7 @@ export default function RoomDetail() {
                     }
               /> */}
               {/* 사진이 하나 이상일때만 보여주고 없을 경우 아무것도 안보여줌 null */}
-              {data?.photos && data.photos.length > 0 ? (
+              {data?.photos && data.photos.length > 4 ? (
                 <Image
                   objectFit={"cover"}
                   w="100%"

@@ -120,7 +120,7 @@ export default function UploadRoom() {
             <FormControl>
               <FormLabel>Price</FormLabel>
               <InputGroup>
-                <InputLeftAddon children={<FaDollarSign />} />
+                <InputLeftAddon children={<FaMoneyBill />} />
                 <Input
                   {...register("price", { required: true })}
                   type="number"

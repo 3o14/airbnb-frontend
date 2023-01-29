@@ -1,4 +1,4 @@
-import { FaRegHeart, FaStar } from "react-icons/fa";
+import { FaCamera, FaRegHeart, FaStar } from "react-icons/fa";
 import {
   Box,
   Button,
@@ -9,7 +9,8 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 
 interface IRoomProps {
   imageUrl: string;
@@ -19,6 +20,7 @@ interface IRoomProps {
   country: string;
   price: number;
   pk: number;
+  isOwner: boolean;
 }
 
 export default function Room({
@@ -29,9 +31,15 @@ export default function Room({
   city,
   country,
   price,
+  isOwner,
 }: IRoomProps) {
 
   const gray = useColorModeValue("gray.600", "gray.300");
+  const navigate = useNavigate();
+  const onCameraClick = (event: React.SyntheticEvent<HTMLButtonElement>) => { // 이벤트 버블링을 막기 위해 (클릭했을 때 rooms/:pk 로 가지 않고 rooms/:pk/photo로 가게 만들기 위함)
+    event.preventDefault();
+    navigate(`/rooms/${pk}/photos`);
+  };
   return (
     <Link to={`/rooms/${pk}`}>
       <VStack alignItems={"flex-start"}>
@@ -43,7 +51,7 @@ export default function Room({
           rounded="2xl"
         >
           {imageUrl ? (
-            <Image minH="280" src={imageUrl} />
+            <Image objectFit={"cover"} minH="280" src={imageUrl} />
           ) : (
             <Box minH="280px" h="100%" w="100%" p={10} bg="green.400" />
           )}
@@ -52,9 +60,11 @@ export default function Room({
             position="absolute"
             top={0}
             right={0}
+            onClick={onCameraClick}
             color="white"
           >
-            <FaRegHeart size="20px" />
+            {/* 유저가 host라면 사진아이콘, 일반 사용자라면 하트아이콘 표시 */}
+            {isOwner ? <FaCamera size="20px" /> : <FaRegHeart size="20px" />}
           </Button>
         </Box>
         <Box>
