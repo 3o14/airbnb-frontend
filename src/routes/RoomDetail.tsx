@@ -54,7 +54,7 @@ export default function RoomDetail() {
             key={index}
           >
             <Skeleton isLoaded={!isLoading} h="100%" w="100%">
-              <Image
+              {/* <Image
                 objectFit={"cover"}
                 w="100%"
                 h="100%"
@@ -63,7 +63,16 @@ export default function RoomDetail() {
                     data?.photos[0]?.file ??
                     `https://source.unsplash.com/random/450x$`
                     }
-              />
+              /> */}
+              {/* 사진이 하나 이상일때만 보여주고 없을 경우 아무것도 안보여줌 null */}
+              {data?.photos && data.photos.length > 0 ? (
+                <Image
+                  objectFit={"cover"}
+                  w="100%"
+                  h="100%"
+                  src={data?.photos[index].file}
+                />
+              ) : null}
             </Skeleton>
           </GridItem>
         ))}
